@@ -1,8 +1,8 @@
-import React, { ElementType, ReactNode } from 'react';
+import { ElementType, ReactNode } from 'react';
 import styled from '@emotion/styled';
 import type { BuiltUiTheme } from '../theme/createTheme';
 
-export type TypographyVariantName = 'body1' | 'body2' | 'h1' | 'h2';
+export type TypographyVariantName = 'body1' | 'body2' | 'h1' | 'h2' | 'h3';
 
 export type TypographyProps<TypographyComponent extends ElementType> = {
   component?: TypographyComponent;
@@ -14,7 +14,7 @@ type TypographyBaseProps = {
   variantName: TypographyVariantName;
 };
 
-const TypographyBase = styled('span', {
+const TypographyBase = styled('p', {
   shouldForwardProp: (propertyName) => propertyName !== 'variantName',
 })<TypographyBaseProps>(({ theme, variantName }) => {
   const builtUiTheme = theme as BuiltUiTheme;
@@ -30,11 +30,11 @@ const TypographyBase = styled('span', {
   };
 });
 
-export function Typography<TypographyComponent extends ElementType = 'span'>(
+export function Typography<TypographyComponent extends ElementType = 'p'>(
   typographyProps: TypographyProps<TypographyComponent>,
 ) {
   const { component, variant, children } = typographyProps;
-  const Component = component ?? 'span';
+  const Component = component ?? 'p';
   const variantName = variant ?? 'body1';
 
   return (

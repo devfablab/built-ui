@@ -1,0 +1,54 @@
+{
+  "name": "@devfab/built-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/types/client/index.d.ts",
+      "import": "./dist/client/index.js"
+    },
+    "./theme": {
+      "types": "./dist/types/theme/index.d.ts",
+      "import": "./dist/theme/index.js"
+    },
+    "./next": {
+      "types": "./dist/types/next/index.d.ts",
+      "import": "./dist/next/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@emotion/cache": ">=11",
+    "@emotion/react": ">=11",
+    "@emotion/server": ">=11",
+    "@emotion/styled": ">=11",
+    "next": ">=16.0.10",
+    "react": ">=19.2",
+    "react-dom": ">=19.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "prettier": "^3.7.4",
+    "rimraf": "^6.1.2",
+    "rollup": "^4.55.1",
+    "typescript": "^5"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:javascript": "rollup -c",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build": "pnpm run clean && pnpm run build:javascript && pnpm run build:types"
+  }
+}

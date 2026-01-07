@@ -1,0 +1,1 @@
+{"version":3,"file":"BuiltUiRegistry.d.ts","sourceRoot":"","sources":["../../../src/next/BuiltUiRegistry.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAqB,MAAM,OAAO,CAAC;AAKrD,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,sBAAsB,CAAC;AAEzD,MAAM,MAAM,oBAAoB,GAAG;IACjC,KAAK,EAAE,YAAY,CAAC;IACpB,QAAQ,EAAE,SAAS,CAAC;CACrB,CAAC;AA+BF,wBAAgB,eAAe,CAAC,oBAAoB,EAAE,oBAAoB,2CA4BzE"}

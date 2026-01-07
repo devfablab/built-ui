@@ -10,13 +10,17 @@ export type BuiltUiThemePalette = {
   primary: BuiltUiThemePaletteColor;
   secondary: BuiltUiThemePaletteColor;
   info: BuiltUiThemePaletteColor;
-  background: {
-    default: string;
-    paper: string;
-  };
+  background: { default: string; paper: string };
   text: {
     primary: string;
     secondary: string;
+    tertiary: string;
+    accent: string;
+    action: string;
+    warning: string;
+    bright: string;
+    light: string;
+    pure: string;
   };
 };
 
@@ -29,6 +33,7 @@ export type BuiltUiThemeTypographyVariant = {
 
 export type BuiltUiThemeTypography = {
   fontFamily: string;
+  getFontVariationSettingsByFontWeight?: (fontWeight: number) => string | undefined;
   variants: Record<string, BuiltUiThemeTypographyVariant>;
 };
 
@@ -47,19 +52,10 @@ export type BuiltUiThemeInput = {
 function createDefaultThemeTypography(): BuiltUiThemeTypography {
   return {
     fontFamily: 'system-ui',
+    getFontVariationSettingsByFontWeight: undefined,
     variants: {
-      body1: {
-        fontSize: 16,
-        fontWeight: 400,
-        lineHeight: 24,
-        letterSpacing: 0,
-      },
-      body2: {
-        fontSize: 14,
-        fontWeight: 400,
-        lineHeight: 20,
-        letterSpacing: 0,
-      },
+      body1: { fontSize: 16, fontWeight: 400, lineHeight: 24, letterSpacing: 0 },
+      body2: { fontSize: 14, fontWeight: 400, lineHeight: 20, letterSpacing: 0 },
       h1: { fontSize: 32, fontWeight: 700, lineHeight: 40, letterSpacing: 0 },
       h2: { fontSize: 24, fontWeight: 700, lineHeight: 32, letterSpacing: 0 },
     },
@@ -74,7 +70,17 @@ function createDefaultThemePalette(themeMode: BuiltUiThemeMode): BuiltUiThemePal
       secondary: { main: '#a78bfa', contrastText: '#0b1020' },
       info: { main: '#38bdf8', contrastText: '#06121a' },
       background: { default: '#0b1020', paper: '#111a33' },
-      text: { primary: '#e5e7eb', secondary: '#a3a3a3' },
+      text: {
+        primary: '#333333',
+        secondary: '#777777',
+        tertiary: '#B0B0B0',
+        accent: '#8C5EFF',
+        action: '#3A5EFF',
+        warning: '#E74C3C',
+        bright: '#FCFCFB',
+        light: '#F5F5F5',
+        pure: '#EDEDED',
+      },
     };
   }
 
@@ -84,7 +90,17 @@ function createDefaultThemePalette(themeMode: BuiltUiThemeMode): BuiltUiThemePal
     secondary: { main: '#7c3aed', contrastText: '#ffffff' },
     info: { main: '#0284c7', contrastText: '#ffffff' },
     background: { default: '#ffffff', paper: '#f7f7f7' },
-    text: { primary: '#111827', secondary: '#6b7280' },
+    text: {
+      primary: '#F2F2F2',
+      secondary: '#F6F6F6',
+      tertiary: '#EDEDED',
+      accent: '#8C5EFF',
+      action: '#3A5EFF',
+      warning: '#E74C3C',
+      bright: '#212529',
+      light: '#222327',
+      pure: '#575757',
+    },
   };
 }
 

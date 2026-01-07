@@ -1,10 +1,7 @@
-'use client';
-
 import { ReactNode, useMemo, useState } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import createEmotionServer from '@emotion/server/create-instance';
 import { BuiltUiThemeProvider } from '../theme/ThemeProvider';
 import type { BuiltUiTheme } from '../theme/createTheme';
 
@@ -48,8 +45,6 @@ export function BuiltUiRegistry(builtUiRegistryProps: BuiltUiRegistryProps) {
   const cacheKey = 'built-ui';
 
   const [emotionCacheEntry] = useState<EmotionCacheEntry>(() => createEmotionCacheEntry(cacheKey));
-
-  const emotionServer = useMemo(() => createEmotionServer(emotionCacheEntry.cache), [emotionCacheEntry.cache]);
 
   useServerInsertedHTML(() => {
     const insertedStyleNameList = emotionCacheEntry.flushInsertedStyleNameList();

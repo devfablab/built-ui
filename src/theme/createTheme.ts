@@ -18,9 +18,9 @@ export type BuiltUiThemePalette = {
     accent: string;
     action: string;
     warning: string;
-    bright: string;
-    light: string;
-    pure: string;
+    quaternary: string;
+    quinary: string;
+    senary: string;
   };
 };
 
@@ -52,12 +52,12 @@ export type BuiltUiThemeInput = {
 function createDefaultThemeTypography(): BuiltUiThemeTypography {
   return {
     fontFamily: 'system-ui',
-    getFontVariationSettingsByFontWeight: undefined,
     variants: {
-      body1: { fontSize: 16, fontWeight: 400, lineHeight: 24, letterSpacing: 0 },
-      body2: { fontSize: 14, fontWeight: 400, lineHeight: 20, letterSpacing: 0 },
-      h1: { fontSize: 32, fontWeight: 700, lineHeight: 40, letterSpacing: 0 },
-      h2: { fontSize: 24, fontWeight: 700, lineHeight: 32, letterSpacing: 0 },
+      body1: { fontSize: 20, fontWeight: 400, lineHeight: 1.167, letterSpacing: -0.01562 },
+      body2: { fontSize: 20, fontWeight: 400, lineHeight: 1.5, letterSpacing: -0.00833 },
+      h1: { fontSize: 36, fontWeight: 700, lineHeight: 1.167, letterSpacing: -0.01562 },
+      h2: { fontSize: 24, fontWeight: 700, lineHeight: 1.2, letterSpacing: -0.00833 },
+      h3: { fontSize: 20, fontWeight: 700, lineHeight: 1.167, letterSpacing: 0 },
     },
   };
 }
@@ -77,9 +77,9 @@ function createDefaultThemePalette(themeMode: BuiltUiThemeMode): BuiltUiThemePal
         accent: '#8C5EFF',
         action: '#3A5EFF',
         warning: '#E74C3C',
-        bright: '#FCFCFB',
-        light: '#F5F5F5',
-        pure: '#EDEDED',
+        quaternary: '#FCFCFB',
+        quinary: '#F5F5F5',
+        senary: '#EDEDED',
       },
     };
   }
@@ -97,9 +97,9 @@ function createDefaultThemePalette(themeMode: BuiltUiThemeMode): BuiltUiThemePal
       accent: '#8C5EFF',
       action: '#3A5EFF',
       warning: '#E74C3C',
-      bright: '#212529',
-      light: '#222327',
-      pure: '#575757',
+      quaternary: '#212529',
+      quinary: '#222327',
+      senary: '#575757',
     },
   };
 }

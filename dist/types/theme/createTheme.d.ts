@@ -19,9 +19,9 @@ export type BuiltUiThemePalette = {
         accent: string;
         action: string;
         warning: string;
-        bright: string;
-        light: string;
-        pure: string;
+        quaternary: string;
+        quinary: string;
+        senary: string;
     };
 };
 export type BuiltUiThemeTypographyVariant = {

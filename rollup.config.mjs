@@ -1,47 +1,37 @@
-import commonjs from "@rollup/plugin-commonjs";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import typescript from "@rollup/plugin-typescript";
+import path from 'node:path';
+import typescript from '@rollup/plugin-typescript';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
-const externalPackageNameSet = new Set([
-  "react",
-  "react/jsx-runtime",
-  "react-dom",
-  "next",
-  "next/navigation",
-  "@emotion/react",
-  "@emotion/styled",
-  "@emotion/cache",
-  "@emotion/server/create-instance",
-]);
+const projectRootPath = process.cwd();
 
-function isExternalModule(moduleIdentifier) {
-  if (externalPackageNameSet.has(moduleIdentifier)) return true;
-  for (const externalPackageName of externalPackageNameSet) {
-    if (moduleIdentifier.startsWith(`${externalPackageName}/`)) return true;
-  }
-  return false;
-}
-
-export default [
-  {
-    input: {
-      index: "src/index.ts",
-      client: "src/client/index.ts",
-      theme: "src/theme/index.ts",
-      next: "src/next/index.ts",
-    },
-    output: {
-      dir: "dist",
-      format: "esm",
-      sourcemap: true,
-      preserveModules: true,
-      preserveModulesRoot: "src",
-    },
-    external: isExternalModule,
-    plugins: [
-      nodeResolve({ extensions: [".js", ".ts", ".tsx"] }),
-      commonjs(),
-      typescript({ tsconfig: "tsconfig.build.json" }),
-    ],
-  },
+const inputFilePathList = [
+  path.join(projectRootPath, 'src/index.ts'),
+  path.join(projectRootPath, 'src/theme/index.ts'),
+  path.join(projectRootPath, 'src/next/index.ts'),
 ];
+
+const externalModuleNameList = ['react', 'react-dom', 'next', '@emotion/react', '@emotion/styled'];
+
+export default {
+  input: inputFilePathList,
+  external: (moduleName) =>
+    externalModuleNameList.includes(moduleName) ||
+    externalModuleNameList.some((name) => moduleName.startsWith(`${name}/`)),
+  output: {
+    dir: 'dist',
+    format: 'esm',
+    sourcemap: true,
+    preserveModules: true,
+    preserveModulesRoot: 'src',
+    entryFileNames: '[name].js',
+  },
+  plugins: [
+    nodeResolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
+    typescript({
+      tsconfig: path.join(projectRootPath, 'tsconfig.json'),
+      declaration: false,
+      declarationMap: false,
+      emitDeclarationOnly: false,
+    }),
+  ],
+};

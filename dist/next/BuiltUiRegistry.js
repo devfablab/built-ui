@@ -1,7 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import { useState } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
-import createCache from '@emotion/cache';
+import createCache from '../node_modules/.pnpm/@emotion_cache@11.14.0/node_modules/@emotion/cache/dist/emotion-cache.esm.js';
 import { CacheProvider } from '@emotion/react';
 import { BuiltUiThemeProvider } from '../theme/ThemeProvider.js';
 

@@ -1,4 +1,4 @@
-import { ElementType, ReactNode } from 'react';
+import { ElementType, ReactNode, createElement, HTMLAttributes } from 'react';
 import styled from '@emotion/styled';
 import type { BuiltUiTheme, BuiltUiThemePalette } from '../theme/createTheme';
 
@@ -6,67 +6,59 @@ export type TypographyVariantName = 'body1' | 'body2' | 'h1' | 'h2' | 'h3';
 
 export type TypographyFontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 
-type TypographyPaletteToken = {
-  [paletteGroupName in keyof BuiltUiThemePalette]: BuiltUiThemePalette[paletteGroupName] extends Record<string, unknown>
-    ? `${paletteGroupName & string}.${keyof BuiltUiThemePalette[paletteGroupName] & string}`
-    : never;
-}[keyof BuiltUiThemePalette];
+export type TypographyTextColorName = keyof BuiltUiThemePalette['text'];
 
-export type TypographyProps<TypographyComponent extends ElementType> = {
-  component?: TypographyComponent;
+export type TypographyProps = {
+  component?: ElementType;
   variant?: TypographyVariantName;
   fontFamily?: string;
   fontWeight?: TypographyFontWeight;
   fontVariationSettings?: string;
-  colorToken?: TypographyPaletteToken;
-  color?: 'primary' | 'secondary' | 'tertiary' | 'accent' | 'action' | 'warning' | 'bright' | 'light' | 'pure';
+  color?: TypographyTextColorName;
   children: ReactNode;
-};
+} & Omit<HTMLAttributes<HTMLElement>, 'color'>;
 
 type TypographyBaseProps = {
+  component: ElementType;
   variantName: TypographyVariantName;
   overrideFontFamily?: string;
   overrideFontWeight?: TypographyFontWeight;
   overrideFontVariationSettings?: string;
-  overrideColorToken?: TypographyPaletteToken;
-  overrideColorValue?: string;
+  overrideTextColorName?: TypographyTextColorName;
 };
 
-function resolvePaletteTokenToColorValue(
-  builtUiThemePalette: BuiltUiThemePalette,
-  typographyPaletteToken: TypographyPaletteToken,
-): string | undefined {
-  const tokenPartList = typographyPaletteToken.split('.');
-  let currentValue: unknown = builtUiThemePalette;
+type TypographyRootProps = {
+  component: ElementType;
+  className?: string;
+  children?: ReactNode;
+} & Omit<HTMLAttributes<HTMLElement>, 'color'>;
 
-  for (const tokenPart of tokenPartList) {
-    if (!currentValue || typeof currentValue !== 'object' || !(tokenPart in (currentValue as Record<string, unknown>)))
-      return undefined;
-    currentValue = (currentValue as Record<string, unknown>)[tokenPart];
-  }
-
-  return typeof currentValue === 'string' ? currentValue : undefined;
+function TypographyRoot(typographyRootProps: TypographyRootProps) {
+  const { component, ...remainingProps } = typographyRootProps;
+  return createElement(component, remainingProps);
 }
 
-const TypographyBase = styled('p', {
+function resolveDefaultComponentByVariant(variantName: TypographyVariantName): ElementType {
+  if (variantName === 'h1' || variantName === 'h2' || variantName === 'h3') return variantName;
+  return 'p';
+}
+
+const TypographyBase = styled(TypographyRoot, {
   shouldForwardProp: (propertyName) =>
     propertyName !== 'variantName' &&
     propertyName !== 'overrideFontFamily' &&
     propertyName !== 'overrideFontWeight' &&
     propertyName !== 'overrideFontVariationSettings' &&
-    propertyName !== 'overrideColorToken' &&
-    propertyName !== 'overrideColorValue',
+    propertyName !== 'overrideTextColorName',
 })<TypographyBaseProps>(({
   theme,
   variantName,
   overrideFontFamily,
   overrideFontWeight,
   overrideFontVariationSettings,
-  overrideColorToken,
-  overrideColorValue,
+  overrideTextColorName,
 }) => {
   const builtUiTheme = theme as BuiltUiTheme;
-
   const typographyVariant = builtUiTheme.typography.variants[variantName] ?? builtUiTheme.typography.variants.body1;
 
   const resolvedFontFamily = overrideFontFamily ?? builtUiTheme.typography.fontFamily;
@@ -74,14 +66,11 @@ const TypographyBase = styled('p', {
 
   const fontVariationSettingsFromTheme =
     builtUiTheme.typography.getFontVariationSettingsByFontWeight?.(resolvedFontWeight);
-
   const resolvedFontVariationSettings =
     overrideFontVariationSettings ?? fontVariationSettingsFromTheme ?? `"wght" ${resolvedFontWeight}`;
 
-  const resolvedColorFromToken = overrideColorToken
-    ? resolvePaletteTokenToColorValue(builtUiTheme.palette, overrideColorToken)
-    : undefined;
-  const resolvedColorValue = overrideColorValue ?? resolvedColorFromToken ?? builtUiTheme.palette.text.primary;
+  const resolvedTextColorName = overrideTextColorName ?? 'primary';
+  const resolvedTextColor = builtUiTheme.palette.text[resolvedTextColorName] ?? builtUiTheme.palette.text.primary;
 
   const rem = (px: number): string => `${px / 16}rem`;
 
@@ -92,37 +81,26 @@ const TypographyBase = styled('p', {
     fontVariationSettings: resolvedFontVariationSettings,
     lineHeight: typographyVariant.lineHeight,
     letterSpacing: `${typographyVariant.letterSpacing}em`,
-    color: resolvedColorValue,
+    color: resolvedTextColor,
   };
 });
 
-export function Typography<TypographyComponent extends ElementType = 'p'>(
-  typographyProps: TypographyProps<TypographyComponent>,
-) {
-  const {
-    component,
-    variant,
-    fontFamily,
-    fontWeight,
-    fontVariationSettings,
-    colorToken,
-    color,
-    children,
-    ...remainingProps
-  } = typographyProps;
+export function Typography(typographyProps: TypographyProps) {
+  const { component, variant, fontFamily, fontWeight, fontVariationSettings, color, children, ...remainingProps } =
+    typographyProps;
 
-  const Component = component ?? 'p';
   const variantName = variant ?? 'body1';
+  const defaultComponent = resolveDefaultComponentByVariant(variantName);
+  const resolvedComponent = component ?? defaultComponent;
 
   return (
     <TypographyBase
-      as={Component}
+      component={resolvedComponent}
       variantName={variantName}
       overrideFontFamily={fontFamily}
       overrideFontWeight={fontWeight}
       overrideFontVariationSettings={fontVariationSettings}
-      overrideColorToken={colorToken}
-      overrideColorValue={color}
+      overrideTextColorName={color}
       {...remainingProps}
     >
       {children}
